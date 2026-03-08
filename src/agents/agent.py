@@ -1,6 +1,6 @@
 """
 Agent 主逻辑
-通过 Coze 流式执行接口发送消息并获取处理结果
+智能客服系统 - 元小吉
 """
 
 import os
@@ -14,8 +14,27 @@ from langchain_core.messages import AnyMessage
 from coze_coding_utils.runtime_ctx.context import default_headers
 from storage.memory.memory_saver import get_memory_saver
 
-# 导入工具
+# 导入所有工具
 from tools.stream_run_tool import stream_run, stream_run_with_params
+from tools.knowledge_base_tool import (
+    search_knowledge,
+    add_knowledge,
+    list_categories,
+    get_faq_by_category
+)
+from tools.analysis_tool import (
+    analyze_user_intent,
+    analyze_sentiment,
+    should_transfer_to_human
+)
+from tools.ticket_tool import (
+    create_ticket,
+    get_ticket,
+    add_ticket_message,
+    update_ticket_status,
+    list_tickets,
+    get_ticket_statistics
+)
 
 # LLM 配置文件路径
 LLM_CONFIG = "config/agent_llm_config.json"
@@ -35,7 +54,7 @@ class AgentState(MessagesState):
 
 def build_agent(ctx=None):
     """
-    构建 Coze 流式接口调用 Agent
+    构建智能客服 Agent - 元小吉
 
     Args:
         ctx: 可选的上下文对象
@@ -70,8 +89,31 @@ def build_agent(ctx=None):
         default_headers=default_headers(ctx) if ctx else {}
     )
 
-    # 定义工具列表
-    tools = [stream_run, stream_run_with_params]
+    # 定义所有工具列表
+    tools = [
+        # 流式接口工具
+        stream_run,
+        stream_run_with_params,
+
+        # 知识库工具
+        search_knowledge,
+        add_knowledge,
+        list_categories,
+        get_faq_by_category,
+
+        # 意图识别和情感分析工具
+        analyze_user_intent,
+        analyze_sentiment,
+        should_transfer_to_human,
+
+        # 工单系统工具
+        create_ticket,
+        get_ticket,
+        add_ticket_message,
+        update_ticket_status,
+        list_tickets,
+        get_ticket_statistics
+    ]
 
     # 构建并返回 Agent
     return create_agent(

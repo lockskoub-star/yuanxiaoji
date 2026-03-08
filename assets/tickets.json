@@ -1,0 +1,22 @@
+[
+  {
+    "ticket_id": "34435564",
+    "user_name": "匿名用户",
+    "contact": "请用户提供联系方式",
+    "issue_type": "投诉",
+    "description": "用户反馈快递太慢，对服务不满意",
+    "priority": "high",
+    "status": "open",
+    "created_at": "2026-03-08 17:13:26",
+    "updated_at": "2026-03-08 17:13:26",
+    "messages": [
+      {
+        "role": "user",
+        "content": "用户反馈快递太慢，对服务不满意",
+        "timestamp": "2026-03-08 17:13:26"
+      }
+    ],
+    "assignee": null,
+    "resolution": null
+  }
+]
