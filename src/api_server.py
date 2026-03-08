@@ -148,7 +148,7 @@ async def chat_stream(request: ChatRequest):
         )
 
 
-def start_server(host: str = "0.0.0.0", port: int = 8000):
+def start_server(host: str = "0.0.0.0", port: int = 8001):
     """
     启动 API 服务器
 
