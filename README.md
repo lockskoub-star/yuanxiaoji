@@ -13,85 +13,59 @@
 - 😊 **情感分析**：分析用户情绪，智能调整回复策略
 - 📝 **工单系统**：自动创建和跟踪工单
 - 🚀 **流式响应**：支持实时流式对话
-- 🌐 **公网访问**：支持多种部署方案
+- 🌐 **公网访问**：支持多种部署方案（ngrok、Railway、云服务器）
 
 ---
 
 ## 🚀 快速开始
 
-### 方式1：本地运行（推荐）
+### 方式1：本地运行
 
 ```bash
 # 启动服务
-docker-compose up -d
-
-# 查看日志
-docker-compose logs -f
+python src/main.py
 
 # 访问 API 文档
-open http://localhost:8000/docs
+open http://localhost:5000/docs
 ```
 
-### 方式2：公网访问（5分钟）
+### 方式2：Railway 部署（推荐，免费且稳定）
+
+**10分钟获得固定公网地址！**
+
+查看快速部署教程：[Railway 快速部署](docs/RAILWAY_QUICK_START.md)
+
+**完整文档：** [Railway 部署指南](docs/RAILWAY_DEPLOYMENT_GUIDE.md)
+
+### 方式3：ngrok 部署（快速测试）
 
 ```bash
-# 1. 启动服务
-docker-compose up -d
+# 1. 注册并获取 authtoken
+# https://ngrok.com/signup
 
-# 2. 使用内网穿透
-npx localtunnel --port 8000 --subdomain yuanxiaoji
+# 2. 安装 ngrok
+wget https://bin.equinox.io/c/bNyj1mQVY4c/v3/ngrok-linux-amd64.zip
+unzip ngrok-linux-amd64.zip
+chmod +x ngrok
+./ngrok config add-authtoken YOUR_TOKEN
 
-# 3. 访问公网地址
-# 会显示：your url is: https://yuanxiaoji.loca.lt
+# 3. 启动
+./ngrok http 5000
 ```
 
-**详细教程：** 查看 [公网访问指南](docs/PUBLIC_ACCESS_GUIDE.md)
+**更多部署方案：** [公网访问指南](docs/PUBLIC_ACCESS_GUIDE.md)
 
 ---
 
-## 📱 公网访问
+## 📱 部署方案对比
 
-### 当前公网地址
+| 方案 | 时间 | 费用 | 稳定性 | 固定域名 | 推荐度 |
+|------|------|------|--------|---------|--------|
+| **Railway** | 10分钟 | 免费（$5/月额度） | ⭐⭐⭐⭐⭐ | ✅ 是 | ⭐⭐⭐⭐⭐ |
+| ngrok | 5分钟 | 免费（有限制） | ⭐⭐⭐⭐ | ❌ 否 | ⭐⭐⭐⭐ |
+| 云服务器 | 30分钟 | ¥150/月起 | ⭐⭐⭐⭐⭐ | ✅ 是 | ⭐⭐⭐ |
 
-```
-https://yuanxiaoji.loca.lt
-```
-
-### 访问方式
-
-#### API 文档
-```
-https://yuanxiaoji.loca.lt/docs
-```
-
-#### 健康检查
-```
-GET https://yuanxiaoji.loca.lt/health
-```
-
-#### 对话接口
-```
-POST https://yuanxiaoji.loca.lt/chat
-Content-Type: application/json
-
-{
-  "message": "你好"
-}
-```
-
-**更多方案：** 查看 [公网访问成功指南](docs/PUBLIC_ACCESS_SUCCESS.md)
-
----
-
-## 🛠️ 技术栈
-
-- **Python**：3.11+
-- **Web 框架**：FastAPI
-- **Agent 框架**：LangChain + LangGraph
-- **大模型**：豆包（doubao-seed-1-6-251015）
-- **容器化**：Docker + Docker Compose
-- **反向代理**：Nginx
-- **WSGI 服务器**：Gunicorn
+**强烈推荐使用 Railway！**
 
 ---
 
@@ -102,9 +76,10 @@ Content-Type: application/json
 ├── config/                       # 配置文件
 │   └── agent_llm_config.json     # 模型配置
 ├── docs/                         # 文档
+│   ├── RAILWAY_QUICK_START.md    # Railway 快速部署
+│   ├── RAILWAY_DEPLOYMENT_GUIDE.md # Railway 详细指南
 │   ├── PUBLIC_ACCESS_GUIDE.md    # 公网访问指南
-│   ├── QUICK_PUBLIC_DEPLOYMENT.md # 快速部署教程
-│   └── PUBLIC_ACCESS_SUCCESS.md  # 公网访问成功指南
+│   └── QUICK_PUBLIC_DEPLOYMENT.md # 快速部署教程
 ├── scripts/                      # 脚本
 │   ├── public_access.sh          # 公网访问部署脚本
 │   └── quick_public.sh           # 快速启动脚本
@@ -118,17 +93,27 @@ Content-Type: application/json
 │   │   ├── analysis_tool.py           # 意图识别和情感分析
 │   │   └── ticket_tool.py             # 工单系统
 │   ├── storage/                   # 存储
-│   │   └── memory/                # 记忆存储
 │   ├── utils/                     # 工具函数
-│   └── api_server.py              # FastAPI 服务
-├── assets/                       # 资源文件
-├── tests/                        # 测试文件
+│   ├── api_server.py              # FastAPI 服务
+│   └── main.py                    # 主入口
 ├── Dockerfile                    # Docker 镜像
 ├── docker-compose.yml            # Docker Compose 配置
-├── nginx.conf                    # Nginx 配置
+├── Procfile                      # Railway 启动配置
+├── railway.toml                  # Railway 项目配置
 ├── gunicorn_config.py            # Gunicorn 配置
 └── requirements.txt              # Python 依赖
 ```
+
+---
+
+## 🛠️ 技术栈
+
+- **Python**：3.11+
+- **Web 框架**：FastAPI
+- **Agent 框架**：LangChain + LangGraph
+- **大模型**：豆包（doubao-seed-1-6-251015）
+- **容器化**：Docker
+- **部署平台**：Railway / ngrok / 云服务器
 
 ---
 
@@ -137,159 +122,165 @@ Content-Type: application/json
 ### 本地测试
 
 ```bash
-# 测试健康检查
-curl http://localhost:8000/health
+# 健康检查
+curl http://localhost:5000/health
 
-# 测试对话
-curl -X POST http://localhost:8000/chat \
+# 发送消息
+curl -X POST http://localhost:5000/chat \
   -H "Content-Type: application/json" \
   -d '{"message": "你好"}'
+
+# 访问 API 文档
+http://localhost:5000/docs
 ```
 
-### 公网测试
+### Railway 测试
 
 ```bash
-# 测试健康检查
-curl https://yuanxiaoji.loca.lt/health
+# 健康检查
+curl https://yuanxiaoji-production.up.railway.app/health
 
-# 测试对话
-curl -X POST https://yuanxiaoji.loca.lt/chat \
+# 发送消息
+curl -X POST https://yuanxiaoji-production.up.railway.app/chat \
   -H "Content-Type: application/json" \
   -d '{"message": "你好"}'
+
+# 访问 API 文档
+https://yuanxiaoji-production.up.railway.app/docs
 ```
 
 ---
 
-## 🔧 配置
+## ⚙️ 配置
 
-### 环境变量
+### Railway 环境变量
 
-创建 `.env` 文件：
+在 Railway 项目设置中添加：
 
 ```env
-# API 配置
-API_HOST=0.0.0.0
-API_PORT=8000
-
-# 豆包模型配置
 COZE_WORKLOAD_IDENTITY_API_KEY=your_api_key
 COZE_INTEGRATION_MODEL_BASE_URL=your_base_url
-
-# 可选配置
-LOG_LEVEL=INFO
+LOG_LEVEL=info
 MAX_MESSAGE_HISTORY=20
 ```
 
-### 模型配置
-
-编辑 `config/agent_llm_config.json`：
-
-```json
-{
-    "config": {
-        "model": "doubao-seed-1-6-251015",
-        "temperature": 0.7,
-        "top_p": 0.9,
-        "max_completion_tokens": 10000,
-        "timeout": 600,
-        "thinking": "disabled"
-    },
-    "sp": "你是元小吉，一个智能客服助手...",
-    "tools": []
-}
-```
+详细配置：查看 [Railway 部署指南](docs/RAILWAY_DEPLOYMENT_GUIDE.md#配置环境变量)
 
 ---
 
 ## 📚 文档
 
-- [公网访问指南](docs/PUBLIC_ACCESS_GUIDE.md) - 详细的公网部署方案
-- [快速部署教程](docs/QUICK_PUBLIC_DEPLOYMENT.md) - 5分钟快速部署
-- [公网访问成功指南](docs/PUBLIC_ACCESS_SUCCESS.md) - 当前公网地址和使用方法
+### 部署相关
+
+- **[Railway 快速部署](docs/RAILWAY_QUICK_START.md)** - 10分钟快速部署到 Railway
+- **[Railway 部署指南](docs/RAILWAY_DEPLOYMENT_GUIDE.md)** - Railway 详细部署教程
+- **[公网访问指南](docs/PUBLIC_ACCESS_GUIDE.md)** - 多种公网部署方案
+- **[快速部署教程](docs/QUICK_PUBLIC_DEPLOYMENT.md)** - 5分钟快速部署
 
 ---
 
 ## 🌐 公网部署方案
 
-### 方案1：ngrok（快速测试）
+### ⭐ Railway（强烈推荐）
 
-```bash
-# 1. 注册并获取 authtoken
-# https://ngrok.com/signup
+**优点：**
+- ✅ 完全免费（$5/月额度）
+- ✅ 固定域名
+- ✅ 自动 HTTPS
+- ✅ 零运维
+- ✅ 自动扩展
 
-# 2. 安装 ngrok
-wget https://bin.equinox.io/c/bNyj1mQVY4c/v3/ngrok-linux-amd64.zip
-unzip ngrok-linux-amd64.zip
-chmod +x ngrok
-./ngrok config add-authtoken YOUR_TOKEN
-
-# 3. 启动
-./ngrok http 8000
-```
-
-### 方案2：Railway（免费生产环境）
-
+**快速开始：**
 1. 访问 https://railway.app
-2. 新建项目，连接 GitHub
+2. 连接 GitHub 仓库
 3. 配置环境变量
 4. 部署完成
 
-### 方案3：云服务器（稳定生产环境）
+详细教程：[Railway 快速部署](docs/RAILWAY_QUICK_START.md)
 
-- 阿里云 ECS：https://www.aliyun.com/product/ecs
-- 腾讯云 CVM：https://cloud.tencent.com/product/cvm
+---
 
-详细步骤：查看 [公网访问指南](docs/PUBLIC_ACCESS_GUIDE.md)
+### ngrok
+
+**优点：**
+- ✅ 快速启动（5分钟）
+- ✅ 速度快
+- ✅ 免费（有限制）
+
+**缺点：**
+- ❌ 地址不固定
+- ❌ 免费版有限制
+
+详细教程：[公网访问指南](docs/PUBLIC_ACCESS_GUIDE.md#方案1ngrok内网穿透-推荐)
+
+---
+
+### 云服务器
+
+**优点：**
+- ✅ 高性能
+- ✅ 完全控制
+- ✅ 适合大规模部署
+
+**推荐：**
+- 阿里云 ECS：2核4G ¥89/月
+- 腾讯云 CVM：2核4G ¥70/月
+
+详细教程：[公网访问指南](docs/PUBLIC_ACCESS_GUIDE.md#方案2云服务器部署)
 
 ---
 
 ## 🔍 常见问题
 
-### Q1: 如何重启服务？
+### Q1: 如何部署到 Railway？
+
+查看：[Railway 快速部署](docs/RAILWAY_QUICK_START.md)
+
+### Q2: Railway 免费额度够用吗？
+
+对于小规模应用（<1000 次请求/天），免费额度完全够用！
+
+### Q3: 本地如何访问服务？
 
 ```bash
-# 重启所有服务
-docker-compose restart
+# 启动服务
+python src/main.py
 
-# 重启 API 服务
-docker-compose restart api
-
-# 查看日志
-docker-compose logs -f api
+# 访问
+http://localhost:5000/docs
 ```
 
-### Q2: 如何查看服务状态？
+### Q4: 如何重启服务？
 
+**本地：**
 ```bash
-# 查看容器状态
-docker-compose ps
-
-# 查看健康状态
-curl http://localhost:8000/health
+# 停止后重新启动
+python src/main.py
 ```
 
-### Q3: 公网地址不固定怎么办？
+**Railway：**
+在控制台点击 "Redeploy"
 
-**解决方案：**
-1. 使用 Railway（固定域名）
-2. 购买域名并配置 DNS
-3. 使用 ngrok 付费版（固定域名）
+---
 
-### Q4: 如何添加新的工具？
+## 📊 服务状态
 
-1. 在 `src/tools/` 中创建新的工具文件
-2. 使用 `@tool` 装饰器定义工具函数
-3. 在 `src/agents/agent.py` 中注册工具
-4. 重启服务
+### 本地服务
+
+- **健康检查**：`http://localhost:5000/health`
+- **API 文档**：`http://localhost:5000/docs`
+
+### Railway 服务
+
+- **健康检查**：`https://yuanxiaoji-production.up.railway.app/health`
+- **API 文档**：`https://yuanxiaoji-production.up.railway.app/docs`
 
 ---
 
 ## 📞 支持
 
-如有问题，请查看：
-- [项目文档](docs/)
-- [公网访问指南](docs/PUBLIC_ACCESS_GUIDE.md)
-- [快速部署教程](docs/QUICK_PUBLIC_DEPLOYMENT.md)
+- **Railway 文档**：https://docs.railway.app
+- **项目文档**：查看 `docs/` 目录
 
 ---
 
@@ -304,7 +295,8 @@ curl http://localhost:8000/health
 - ✅ 支持工单系统
 - ✅ 实现意图识别和情感分析
 - ✅ 支持流式对话
-- ✅ 提供公网访问
+- ✅ 添加 Railway 部署支持
+- ✅ 添加 ngrok 部署支持
 - ✅ Docker 容器化部署
 
 ---
@@ -321,4 +313,10 @@ MIT License
 
 ---
 
-**🎉 立即体验：[https://yuanxiaoji.loca.lt/docs](https://yuanxiaoji.loca.lt/docs)**
+## 🎉 开始使用
+
+**立即部署到 Railway：**
+
+[📖 查看快速部署教程](docs/RAILWAY_QUICK_START.md)
+
+**10分钟获得稳定的公网地址！** 🚀

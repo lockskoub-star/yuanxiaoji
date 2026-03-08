@@ -26,7 +26,7 @@ COPY . .
 # 创建必要的目录
 RUN mkdir -p /app/logs /app/assets
 
-# 暴露端口
+# 暴露端口（Railway 会自动设置 PORT 环境变量）
 EXPOSE 8000
 
 # 健康检查

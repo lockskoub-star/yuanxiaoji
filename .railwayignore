@@ -1,0 +1,21 @@
+# Railway 构建时忽略的文件
+.git
+.gitignore
+README.md
+docs
+*.md
+tests
+__pycache__
+*.pyc
+.env
+.env.example
+node_modules
+dist
+.DS_Store
+*.log
+logs
+assets
+*.tar.gz
+*.zip
+scripts/*.sh
+scripts/*.py
