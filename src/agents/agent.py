@@ -1,6 +1,7 @@
 """
 Agent 主逻辑
 智能客服系统 - 元小吉
+支持多渠道接入（豆包、微信、网站）
 """
 
 import os
@@ -34,6 +35,19 @@ from tools.ticket_tool import (
     update_ticket_status,
     list_tickets,
     get_ticket_statistics
+)
+from tools.coze_knowledge_tool import (
+    add_document_to_knowledge,
+    search_coze_knowledge,
+    import_url_to_knowledge,
+    import_text_to_knowledge
+)
+from tools.multi_channel_tool import (
+    chat_with_doubao,
+    get_channel_config,
+    list_available_channels,
+    send_to_channel,
+    get_integration_guide
 )
 
 # LLM 配置文件路径
@@ -95,11 +109,17 @@ def build_agent(ctx=None):
         stream_run,
         stream_run_with_params,
 
-        # 知识库工具
+        # 本地知识库工具
         search_knowledge,
         add_knowledge,
         list_categories,
         get_faq_by_category,
+
+        # 扣子知识库工具
+        add_document_to_knowledge,
+        search_coze_knowledge,
+        import_url_to_knowledge,
+        import_text_to_knowledge,
 
         # 意图识别和情感分析工具
         analyze_user_intent,
@@ -112,7 +132,14 @@ def build_agent(ctx=None):
         add_ticket_message,
         update_ticket_status,
         list_tickets,
-        get_ticket_statistics
+        get_ticket_statistics,
+
+        # 多渠道工具
+        chat_with_doubao,
+        get_channel_config,
+        list_available_channels,
+        send_to_channel,
+        get_integration_guide
     ]
 
     # 构建并返回 Agent
