@@ -4,9 +4,11 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # 安装系统依赖
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y \build-essential\
     gcc \
     curl \
+    python3-dev\
+    libffi-dev\
     && rm -rf /var/lib/apt/lists/*
 
 # 设置环境变量
@@ -27,7 +29,7 @@ COPY . .
 RUN mkdir -p /app/logs /app/assets
 
 # 暴露端口（Railway 会自动设置 PORT 环境变量）
-EXPOSE 8000
+EXPOSE 5000
 
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
