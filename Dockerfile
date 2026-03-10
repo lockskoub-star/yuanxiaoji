@@ -5,10 +5,13 @@ WORKDIR /app
 
 # 安装系统依赖
 RUN apt-get update && apt-get install -y \build-essential\
+    make\
+    g++\
     gcc \
     curl \
     python3-dev\
     libffi-dev\
+    libssl-dev\
     && rm -rf /var/lib/apt/lists/*
 
 # 设置环境变量
@@ -21,7 +24,7 @@ COPY requirements.txt .
 
 # 安装 Python 依赖
 RUN pip install --no-cache-dir -r requirements.txt
-
+RUN pip install --upgrade pip setuptools wheel
 # 复制项目文件
 COPY . .
 
@@ -33,7 +36,7 @@ EXPOSE 5000
 
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD curl -f http://localhost:5000/health || exit 1
 
 # 启动命令
 CMD ["gunicorn", "--config", "/app/gunicorn_config.py", "src.api_server:app"]
